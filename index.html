@@ -1,1 +1,155 @@
 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>听见许嵩</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:"Microsoft YaHei",sans-serif;
+ color:#fff;
+ background:linear-gradient(135deg,#10172c,#27234b,#11182a);
+ min-height:100vh;
+}
+header{text-align:center;padding:65px 20px}
+h1{font-size:48px;letter-spacing:8px}
+header p{color:#b9c4e8}
+main{max-width:950px;margin:auto;padding:20px}
+.panel{
+ background:#ffffff12;
+ border:1px solid #ffffff25;
+ border-radius:20px;
+ padding:25px;margin-bottom:25px;
+ backdrop-filter:blur(15px);
+}
+input{
+ width:100%;padding:15px;border-radius:12px;
+ border:1px solid #aaa;background:#ffffff12;
+ color:white;font-size:16px;
+}
+button{
+ padding:10px 17px;margin:6px;
+ border:0;border-radius:20px;
+ background:#b9b5ff;color:#17172c;
+ cursor:pointer;transition:.25s;
+}
+button:hover{transform:translateY(-3px);background:#fff}
+#songs{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+ gap:15px;
+}
+.song{
+ padding:20px;border-radius:15px;
+ background:#ffffff12;animation:appear .4s;
+}
+.song h3{color:#d2ceff}
+.song p{color:#b9c4e8;font-size:13px}
+@keyframes appear{
+ from{opacity:0;transform:translateY(15px)}
+ to{opacity:1;transform:translateY(0)}
+}
+footer{text-align:center;padding:35px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+ <h1>听见许嵩</h1>
+ <p>寻找属于你的那一首歌 · Discover Vae</p>
+</header>
+
+<main>
+ <section class="panel">
+  <h2>寻找歌曲</h2>
+  <input id="search" placeholder="搜索歌曲名称或关键词...">
+  <h3>选择心情</h3>
+  <div id="tags">
+   <button onclick="filter('全部')">全部</button>
+   <button onclick="filter('古风')">古风</button>
+   <button onclick="filter('青春')">青春</button>
+   <button onclick="filter('治愈')">治愈</button>
+   <button onclick="filter('遗憾')">遗憾</button>
+   <button onclick="filter('思念')">思念</button>
+  </div>
+ </section>
+
+ <section class="panel">
+  <h2>歌曲推荐</h2>
+  <button onclick="randomSong()">随机推荐一首 ✨</button>
+  <div id="recommend"></div>
+  <h2>歌曲列表</h2>
+  <div id="songs"></div>
+ </section>
+
+ <section class="panel">
+  <h2>专辑探索</h2>
+  <div id="albums">
+   <button onclick="album('寻雾启示')">寻雾启示</button>
+   <button onclick="album('苏格拉没有底')">苏格拉没有底</button>
+   <button onclick="album('梦游计')">梦游计</button>
+   <button onclick="album('青年晚报')">青年晚报</button>
+   <button onclick="album('不如吃茶去')">不如吃茶去</button>
+  </div>
+ </section>
+</main>
+
+<footer>听见许嵩 · 非官方粉丝向音乐推荐网站</footer>
+
+<script>
+const data=[
+ {name:"有何不可",album:"自定义",tags:["青春","治愈"]},
+ {name:"灰色头像",album:"寻雾启示",tags:["遗憾","思念"]},
+ {name:"清明雨上",album:"自定义",tags:["古风","思念"]},
+ {name:"庐州月",album:"寻雾启示",tags:["古风","思念"]},
+ {name:"幻听",album:"梦游计",tags:["遗憾","思念"]},
+ {name:"想象之中",album:"苏格拉没有底",tags:["遗憾"]},
+ {name:"雅俗共赏",album:"青年晚报",tags:["治愈"]},
+ {name:"山水之间",album:"不如吃茶去",tags:["古风","治愈"]},
+ {name:"断桥残雪",album:"自定义",tags:["古风","遗憾"]},
+ {name:"素颜",album:"自定义",tags:["青春","治愈"]}
+];
+
+let current="全部";
+
+function render(){
+ let q=document.getElementById("search").value.toLowerCase();
+ let list=data.filter(s=>
+ (current==="全部"||s.tags.includes(current))&&
+ (s.name.toLowerCase().includes(q)||
+ s.album.toLowerCase().includes(q)||
+ s.tags.some(t=>t.includes(q)))
+ );
+ document.getElementById("songs").innerHTML=
+ list.map(s=>`
+ <div class="song">
+ <h3>${s.name}</h3>
+ <p>专辑：${s.album}</p>
+ <p>关键词：${s.tags.join(" · ")}</p>
+ </div>`).join("")||"<p>没有找到歌曲</p>";
+}
+
+function filter(tag){
+ current=tag;
+ render();
+}
+
+function album(name){
+ current="全部";
+ document.getElementById("search").value=name;
+ render();
+}
+
+function randomSong(){
+ let s=data[Math.floor(Math.random()*data.length)];
+ document.getElementById("recommend").innerHTML=
+ `<h3>${s.name}</h3><p>来自：${s.album}</p>`;
+}
+
+document.getElementById("search").addEventListener("input",render);
+render();
+</script>
+</body>
+</html>
+
